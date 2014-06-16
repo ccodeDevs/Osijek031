@@ -5,4 +5,16 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- side menu -->
+    <string name="osijek031">Osijek 031</string>
+    <string name="culture">Kultura</string>
+    <string name="education">Obrazovanje</string>
+    <string name="nightlife">Nightlife</string>
+    <string name="life">Život</string>
+    <string name="communis">Communis</string>
+    <string name="economy">Gospodarstvo</string>
+    <string name="cyber">Cyber</string>
+    <string name="politics">Politika</string>
+    <string name="sport">Sport</string>
+
 </resources>

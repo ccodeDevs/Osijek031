@@ -1,15 +1,13 @@
 package com.ccode.osijek031.news.adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.ccode.osijek031.R;
-import com.ccode.osijek031.news.models.CategoriesWrapper;
 import com.ccode.osijek031.news.models.Category;
 
 /**
@@ -20,14 +18,12 @@ import com.ccode.osijek031.news.models.Category;
  * @version 1.0
  */
 
-
 public class SideMenuAdapter extends BaseAdapter {
 
 	// Data Source
-	private CategoriesWrapper mDataSource = new CategoriesWrapper();
+	private Category[] mDataSource = Category.values();
 
 	private Context mContext;
-	private ViewHolder mViewHolder;
 
 	public SideMenuAdapter(Context context) throws IllegalArgumentException {
 		if (context == null) {
@@ -37,55 +33,33 @@ public class SideMenuAdapter extends BaseAdapter {
 		mContext = context;
 	}
 
-	public void setData(List<Category> categories) {
-		mDataSource.clear();
-		mDataSource.setCategories(categories);
-		notifyDataSetChanged();
-	}
-
 	@Override
 	public int getCount() {
-		return mDataSource.getCategories().size();
+		return mDataSource.length;
 	}
 
 	@Override
 	public Category getItem(int position) {
-		return mDataSource.getCategories().get(position);
+		return mDataSource[position];
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return mDataSource.getCategories().get(position).getId();
+		return 0;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.item_news_list, parent, false);
-			mViewHolder = new ViewHolder();
-			initViewHolderChilds();
-			convertView.setTag(mViewHolder);
-		} else {
-			mViewHolder = (ViewHolder) convertView.getTag();
-		}
+		convertView = LayoutInflater.from(mContext).inflate(
+				R.layout.item_side_menu, parent, false);
 
 		Category item = getItem(position);
 		if (item != null) {
-			fillViewHolderWithData(item);
+			TextView titleTextView = (TextView) convertView
+					.findViewById(R.id.item_side_menu_title);
+			titleTextView.setText(item.getName());
 		}
 
 		return convertView;
-	}
-
-	private void fillViewHolderWithData(Category item) {
-		// TODO TBD
-	}
-
-	private void initViewHolderChilds() {
-	}
-
-	private static class ViewHolder {
-		// TODO TBD
 	}
 }

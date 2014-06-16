@@ -1,5 +1,7 @@
 package com.ccode.osijek031.news.models;
 
+import com.ccode.osijek031.R;
+
 /**
  * Title: CCode Osijek031 <br />
  * Copyright: Copyright @ 2014 <br />
@@ -8,33 +10,21 @@ package com.ccode.osijek031.news.models;
  * @version 1.0
  */
 
-public class Category {
+public enum Category {
 
-	private long id;
-	private String title;
-	private String thumbnailPath;
+	OSIJEK031(R.string.osijek031), CULTURE(R.string.culture), EDUCATION(
+			R.string.education), NIGHTLIFE(R.string.nightlife), LIFE(
+			R.string.life), COMMUNIS(R.string.communis), ECONOMY(
+			R.string.economy), CYBER(R.string.cyber), POLITICS(
+			R.string.politics), SPORT(R.string.sport);
 
-	public long getId() {
-		return id;
+	public int name;
+
+	Category(int name) {
+		this.name = name;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getThumbnailPath() {
-		return thumbnailPath;
-	}
-
-	public void setThumbnailPath(String thumbnailPath) {
-		this.thumbnailPath = thumbnailPath;
+	public int getName() {
+		return name;
 	}
 }

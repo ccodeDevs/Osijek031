@@ -77,7 +77,7 @@ public class NewsListFragment extends BaseFragment {
 	@Override
 	protected void initData() {
 		NewsDataManager.getInstance(getActivity()).getNews(mNewsLoadedListener,
-				true);
+				false);
 	}
 
 	private OnNewsLoadedListener mNewsLoadedListener = new OnNewsLoadedListener() {

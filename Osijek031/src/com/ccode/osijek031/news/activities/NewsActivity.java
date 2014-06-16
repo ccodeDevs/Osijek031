@@ -1,15 +1,22 @@
 package com.ccode.osijek031.news.activities;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.activities.BaseActivity;
 import com.ccode.osijek031.news.adapters.SideMenuAdapter;
 import com.ccode.osijek031.news.fragments.NewsGridFragment;
+import com.ccode.osijek031.news.fragments.NewsListFragment;
 
 /**
  * Title: CCode Osijek031 <br />
@@ -23,8 +30,12 @@ public class NewsActivity extends BaseActivity {
 
 	// navigation drawer
 	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
 	private ListView mSideMenuListView;
 	private SideMenuAdapter mSideMenuAdapter;
+
+	// flags
+	private boolean switchViewSelected = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,11 @@ public class NewsActivity extends BaseActivity {
 		}
 	}
 
+	private void configureActionBar(ActionBar actionBar) {
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+	}
+
 	@Override
 	protected void initUi() {
 		initSideMenu();
@@ -56,24 +72,80 @@ public class NewsActivity extends BaseActivity {
 		mSideMenuListView.setAdapter(mSideMenuAdapter);
 	}
 
-	private void configureActionBar(ActionBar actionBar) {
-		actionBar.setDisplayHomeAsUpEnabled(false);
-		actionBar.setDisplayShowHomeEnabled(false);
-		actionBar.setDisplayUseLogoEnabled(false);
-		actionBar.setHomeButtonEnabled(false);
-		actionBar.setDisplayShowTitleEnabled(false);
-	}
-
 	@Override
 	protected void initListeners() {
-		mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(this,
-				mDrawerLayout, R.drawable.ic_drawer, R.string.app_name,
-				R.string.app_name));
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.app_name, R.string.app_name);
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		mSideMenuListView.setOnItemClickListener(mItemClickListener);
+	}
+
+	private OnItemClickListener mItemClickListener = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			handleSideMenuItemClick(position);
+		}
+
+	};
+
+	protected void handleSideMenuItemClick(int position) {
+		mDrawerLayout.closeDrawers();
 	}
 
 	private void showNewsFragment() {
 		replaceFragment(R.id.activity_news_container,
-				NewsGridFragment.newInstance(), true);
+				NewsGridFragment.newInstance(), false);
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_news, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+
+		switch (item.getItemId()) {
+		case R.id.menu_news_switch_view:
+			toggleSwitchViewClick(item);
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
+	private void toggleSwitchViewClick(MenuItem item) {
+		if (switchViewSelected) {
+			item.setIcon(R.drawable.ic_menu_selectall_holo_dark);
+			switchViewSelected = false;
+			replaceFragment(R.id.activity_news_container,
+					NewsGridFragment.newInstance(), false);
+		} else {
+			item.setIcon(R.drawable.ic_menu_selectall_holo_light);
+			switchViewSelected = true;
+			replaceFragment(R.id.activity_news_container,
+					NewsListFragment.newInstance(), false);
+		}
 	}
 
 	@Override

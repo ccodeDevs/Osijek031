@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.news.models.News;
 import com.ccode.osijek031.news.models.NewsWrapper;
-import com.ccode.osijek031.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -103,14 +102,11 @@ public class NewsListAdapter extends BaseAdapter {
 			if (m.find()) {
 				imagePath = m.group(1);
 			}
-			int radius = mContext.getResources().getDimensionPixelSize(
-					R.dimen.grid_image_radius);
 
 			Picasso.with(mContext)
 					.load(imagePath)
 					.resizeDimen(R.dimen.grid_image_width,
 							R.dimen.grid_image_height)
-					.transform(new RoundedTransformation(radius, 0))
 					.placeholder(R.drawable.logo).into(mViewHolder.mImage);
 		}
 	}

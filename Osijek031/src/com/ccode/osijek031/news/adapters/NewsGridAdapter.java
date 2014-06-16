@@ -16,7 +16,6 @@ import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.adapters.InfiniteBaseAdapter;
 import com.ccode.osijek031.news.models.News;
 import com.ccode.osijek031.news.models.NewsWrapper;
-import com.ccode.osijek031.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -98,14 +97,8 @@ public class NewsGridAdapter extends InfiniteBaseAdapter {
 			if (m.find()) {
 				imagePath = m.group(1);
 			}
-			int radius = mContext.getResources().getDimensionPixelSize(
-					R.dimen.list_image_radius);
 
-			Picasso.with(mContext)
-					.load(imagePath)
-					.resizeDimen(R.dimen.list_image_width,
-							R.dimen.list_image_height)
-					.transform(new RoundedTransformation(radius, 0))
+			Picasso.with(mContext).load(imagePath).fit()
 					.placeholder(R.drawable.logo).into(mViewHolder.mImage);
 		}
 	}

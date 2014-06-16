@@ -6,9 +6,13 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 
+import com.android.volley.VolleyError;
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.activities.BaseActivity;
 import com.ccode.osijek031.news.activities.NewsActivity;
+import com.ccode.osijek031.news.managers.NewsDataManager;
+import com.ccode.osijek031.news.managers.NewsDataManager.OnNewsLoadedListener;
+import com.ccode.osijek031.news.models.NewsWrapper;
 import com.ccode.osijek031.splash.fragments.SplashFragment;
 import com.ccode.osijek031.utils.SystemUiHider;
 
@@ -25,6 +29,7 @@ public class SplashActivity extends BaseActivity {
 	private SystemUiHider mSystemUiHider;
 
 	private Handler mNextActivityHandler;
+	private long getDataFromBackendStartTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +52,6 @@ public class SplashActivity extends BaseActivity {
 		actionBar.hide();
 	}
 
-	private void addSplashFragment() {
-		replaceFragment(R.id.activity_splash_content_container,
-				SplashFragment.newInstance(), false);
-	}
-
 	@Override
 	protected void initUi() {
 		mNextActivityHandler = new Handler();
@@ -65,11 +65,9 @@ public class SplashActivity extends BaseActivity {
 		mSystemUiHider.setup();
 	}
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		mSystemUiHider.hide();
+	private void addSplashFragment() {
+		replaceFragment(R.id.activity_splash_content_container,
+				SplashFragment.newInstance(), false);
 	}
 
 	@Override
@@ -85,11 +83,54 @@ public class SplashActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		startNextActivityTask();
+		getNewsFromBackendTask();
 	}
 
-	private void startNextActivityTask() {
-		mNextActivityHandler.postDelayed(mRunnable, 2000);
+	protected void getNewsFromBackendTask() {
+		getDataFromBackendStartTime = System.currentTimeMillis();
+		NewsDataManager.getInstance(this).getNews(mNewsLoadedListener, true);
+	}
+
+	private OnNewsLoadedListener mNewsLoadedListener = new OnNewsLoadedListener() {
+
+		@Override
+		public void onResponse(NewsWrapper news) {
+			handleNewsResponse(news);
+		}
+
+		@Override
+		public void onError(VolleyError error) {
+			handleNewsErrorLoading(error);
+		}
+
+	};
+
+	private void handleNewsResponse(NewsWrapper news) {
+		calculateNextActivityStart();
+	}
+
+	private void handleNewsErrorLoading(VolleyError error) {
+		calculateNextActivityStart();
+	}
+
+	private void calculateNextActivityStart() {
+		long difference = System.currentTimeMillis()
+				- getDataFromBackendStartTime;
+
+		if (difference > 2000) {
+			startNextActivity();
+		} else {
+			mNextActivityHandler.postDelayed(mRunnable, difference);
+		}
+	}
+
+	private void startNextActivity() {
+		mSystemUiHider.hide();
+
+		Intent intent = new Intent(this, NewsActivity.class);
+		startActivity(intent);
+		finish();
+
 	}
 
 	private Runnable mRunnable = new Runnable() {
@@ -99,12 +140,6 @@ public class SplashActivity extends BaseActivity {
 			startNextActivity();
 		}
 	};
-
-	private void startNextActivity() {
-		Intent intent = new Intent(this, NewsActivity.class);
-		startActivity(intent);
-		finish();
-	}
 
 	@Override
 	protected void initListeners() {
