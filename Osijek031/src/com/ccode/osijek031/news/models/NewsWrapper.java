@@ -3,8 +3,8 @@ package com.ccode.osijek031.news.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
-import org.simpleframework.xml.Root;
 
 import com.ccode.osijek031.base.models.BaseModel;
 
@@ -16,39 +16,40 @@ import com.ccode.osijek031.base.models.BaseModel;
  * @version 1.0
  */
 
-@Root(name = "channel")
 public class NewsWrapper extends BaseModel {
 
-	@ElementList(entry = "item", data = true, inline = true)
-	private List<News> mDataSource;
+	@Element(name = "channel")
+	private Channel mChannel = new Channel();
 
-	public NewsWrapper() {
-		initObjects();
+	public Channel getChannel() {
+		return mChannel;
 	}
 
-	private void initObjects() {
-		mDataSource = new ArrayList<News>();
-	}
+	public static class Channel {
 
-	public List<News> getNews() {
-		return mDataSource;
-	}
+		@ElementList(inline = true, entry = "item")
+		private List<News> mDataSource = new ArrayList<News>();
 
-	public News getNews(long id) {
-		for (News news : mDataSource) {
-			if (news.getId() == id) {
-				return news;
-			}
+		public List<News> getNews() {
+			return mDataSource;
 		}
-		return null;
-	}
 
-	public void setNews(List<News> news) {
-		this.mDataSource.clear();
-		this.mDataSource.addAll(news);
-	}
+		public News getNews(long id) {
+			for (News news : mDataSource) {
+				if (news.getId() == id) {
+					return news;
+				}
+			}
+			return null;
+		}
 
-	public void clear() {
-		this.mDataSource.clear();
+		public void setNews(List<News> news) {
+			this.mDataSource.clear();
+			this.mDataSource.addAll(news);
+		}
+
+		public void clear() {
+			this.mDataSource.clear();
+		}
 	}
 }

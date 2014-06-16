@@ -1,19 +1,22 @@
 package com.ccode.osijek031.news.adapters;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ccode.osijek031.R;
-import com.ccode.osijek031.base.adapters.InfiniteBaseAdapter;
 import com.ccode.osijek031.news.models.News;
 import com.ccode.osijek031.news.models.NewsWrapper;
+import com.ccode.osijek031.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -24,7 +27,7 @@ import com.squareup.picasso.Picasso;
  * @version 1.0
  */
 
-public class NewsListAdapter extends InfiniteBaseAdapter {
+public class NewsListAdapter extends BaseAdapter {
 
 	// Data Source
 	private NewsWrapper mDataSource = new NewsWrapper();
@@ -41,24 +44,24 @@ public class NewsListAdapter extends InfiniteBaseAdapter {
 	}
 
 	public void setData(List<News> news) {
-		mDataSource.clear();
-		mDataSource.setNews(news);
+		mDataSource.getChannel().clear();
+		mDataSource.getChannel().setNews(news);
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return mDataSource.getNews().size();
+		return mDataSource.getChannel().getNews().size();
 	}
 
 	@Override
 	public News getItem(int position) {
-		return mDataSource.getNews().get(position);
+		return mDataSource.getChannel().getNews().get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return mDataSource.getNews().get(position).getId();
+		return mDataSource.getChannel().getNews().get(position).getId();
 	}
 
 	@Override
@@ -83,18 +86,32 @@ public class NewsListAdapter extends InfiniteBaseAdapter {
 
 	private void fillViewHolderWithData(News item) {
 		String title = item.getTitle();
-		if (TextUtils.isEmpty(title)) {
+		if (!TextUtils.isEmpty(title)) {
 			mViewHolder.mTitleText.setText(title);
 		}
 
 		String date = item.getPublishedDate();
-		if (TextUtils.isEmpty(title)) {
+		if (!TextUtils.isEmpty(title)) {
 			mViewHolder.mDateText.setText(date);
 		}
 
-		String imagePath = item.getImagePath();
-		if (TextUtils.isEmpty(imagePath)) {
-			Picasso.with(mContext).load(imagePath).into(mViewHolder.mImage);
+		String imagePath = item.getDescription();
+		if (!TextUtils.isEmpty(imagePath)) {
+			Pattern p = Pattern
+					.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+			Matcher m = p.matcher(imagePath);
+			if (m.find()) {
+				imagePath = m.group(1);
+			}
+			int radius = mContext.getResources().getDimensionPixelSize(
+					R.dimen.grid_image_radius);
+
+			Picasso.with(mContext)
+					.load(imagePath)
+					.resizeDimen(R.dimen.grid_image_width,
+							R.dimen.grid_image_height)
+					.transform(new RoundedTransformation(radius, 0))
+					.placeholder(R.drawable.logo).into(mViewHolder.mImage);
 		}
 	}
 
@@ -105,12 +122,6 @@ public class NewsListAdapter extends InfiniteBaseAdapter {
 				.findViewById(R.id.item_news_list_date);
 		mViewHolder.mImage = (ImageView) parent
 				.findViewById(R.id.item_news_list_image);
-	}
-
-	@Override
-	public int getTotalItems() {
-		// TODO TBD
-		return 0;
 	}
 
 	private static class ViewHolder {

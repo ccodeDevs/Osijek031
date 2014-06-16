@@ -6,4 +6,7 @@
     <!-- actionbar -->
     <color name="action_bar_color">#33B5E5</color>
 
+    <!-- grid -->
+    <color name="white_transparent">#AAFFFFFF</color>
+
 </resources>

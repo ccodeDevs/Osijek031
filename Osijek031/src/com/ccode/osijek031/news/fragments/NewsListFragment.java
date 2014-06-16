@@ -46,6 +46,7 @@ public class NewsListFragment extends BaseFragment {
 		mListView = (ListView) parent
 				.findViewById(R.id.fragment_news_list_listview);
 		mListAdapter = new NewsListAdapter(getActivity());
+		mListView.setAdapter(mListAdapter);
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class NewsListFragment extends BaseFragment {
 			return;
 		}
 
-		mListAdapter.setData(news.getNews());
+		mListAdapter.setData(news.getChannel().getNews());
 	}
 
 	public static BaseFragment newInstance() {

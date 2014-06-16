@@ -1,6 +1,7 @@
 package com.ccode.osijek031.news.models;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 import com.ccode.osijek031.base.models.BaseModel;
 
@@ -12,14 +13,15 @@ import com.ccode.osijek031.base.models.BaseModel;
  * @version 1.0
  */
 
+@Root(name = "item")
 public class News extends BaseModel {
 
 	private long id;
 
-	@Element
+	@Element(required = false)
 	private String title;
 
-	@Element
+	@Element(required = false)
 	private String description;
 
 	private String thumbnailPath;

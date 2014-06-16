@@ -9,7 +9,7 @@ import android.widget.ListView;
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.activities.BaseActivity;
 import com.ccode.osijek031.news.adapters.SideMenuAdapter;
-import com.ccode.osijek031.news.fragments.NewsListFragment;
+import com.ccode.osijek031.news.fragments.NewsGridFragment;
 
 /**
  * Title: CCode Osijek031 <br />
@@ -73,7 +73,7 @@ public class NewsActivity extends BaseActivity {
 
 	private void showNewsFragment() {
 		replaceFragment(R.id.activity_news_container,
-				NewsListFragment.newInstance(), true);
+				NewsGridFragment.newInstance(), true);
 	}
 
 	@Override

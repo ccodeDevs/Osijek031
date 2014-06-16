@@ -1,16 +1,23 @@
 package com.ccode.osijek031.news.adapters;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.adapters.InfiniteBaseAdapter;
 import com.ccode.osijek031.news.models.News;
 import com.ccode.osijek031.news.models.NewsWrapper;
+import com.ccode.osijek031.utils.RoundedTransformation;
+import com.squareup.picasso.Picasso;
 
 /**
  * Title: CCode Osijek031 <br />
@@ -37,24 +44,24 @@ public class NewsGridAdapter extends InfiniteBaseAdapter {
 	}
 
 	public void setData(List<News> news) {
-		mDataSource.clear();
-		mDataSource.setNews(news);
+		mDataSource.getChannel().clear();
+		mDataSource.getChannel().setNews(news);
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return mDataSource.getNews().size();
+		return mDataSource.getChannel().getNews().size();
 	}
 
 	@Override
 	public News getItem(int position) {
-		return mDataSource.getNews().get(position);
+		return mDataSource.getChannel().getNews().get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return mDataSource.getNews().get(position).getId();
+		return mDataSource.getChannel().getNews().get(position).getId();
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class NewsGridAdapter extends InfiniteBaseAdapter {
 			convertView = LayoutInflater.from(mContext).inflate(
 					R.layout.item_news_grid, parent, false);
 			mViewHolder = new ViewHolder();
-			initViewHolderChilds();
+			initViewHolderChilds(convertView);
 			convertView.setTag(mViewHolder);
 		} else {
 			mViewHolder = (ViewHolder) convertView.getTag();
@@ -78,10 +85,37 @@ public class NewsGridAdapter extends InfiniteBaseAdapter {
 	}
 
 	private void fillViewHolderWithData(News item) {
-		// TODO TBD
+		String title = item.getTitle();
+		if (!TextUtils.isEmpty(title)) {
+			mViewHolder.mTitleText.setText(title);
+		}
+
+		String imagePath = item.getDescription();
+		if (!TextUtils.isEmpty(imagePath)) {
+			Pattern p = Pattern
+					.compile("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
+			Matcher m = p.matcher(imagePath);
+			if (m.find()) {
+				imagePath = m.group(1);
+			}
+			int radius = mContext.getResources().getDimensionPixelSize(
+					R.dimen.list_image_radius);
+
+			Picasso.with(mContext)
+					.load(imagePath)
+					.resizeDimen(R.dimen.list_image_width,
+							R.dimen.list_image_height)
+					.transform(new RoundedTransformation(radius, 0))
+					.placeholder(R.drawable.logo).into(mViewHolder.mImage);
+		}
 	}
 
-	private void initViewHolderChilds() {
+	private void initViewHolderChilds(View parent) {
+		mViewHolder.mTitleText = (TextView) parent
+				.findViewById(R.id.item_news_grid_title);
+
+		mViewHolder.mImage = (ImageView) parent
+				.findViewById(R.id.item_news_grid_image);
 	}
 
 	@Override
@@ -91,6 +125,7 @@ public class NewsGridAdapter extends InfiniteBaseAdapter {
 	}
 
 	private static class ViewHolder {
-		// TODO TBD
+		private TextView mTitleText;
+		private ImageView mImage;
 	}
 }
