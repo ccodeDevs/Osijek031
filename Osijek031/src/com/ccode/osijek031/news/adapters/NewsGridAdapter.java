@@ -1,5 +1,6 @@
 package com.ccode.osijek031.news.adapters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.adapters.InfiniteBaseAdapter;
 import com.ccode.osijek031.news.models.News;
-import com.ccode.osijek031.news.models.NewsWrapper;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -29,7 +29,7 @@ import com.squareup.picasso.Picasso;
 public class NewsGridAdapter extends InfiniteBaseAdapter {
 
 	// Data Source
-	private NewsWrapper mDataSource = new NewsWrapper();
+	private List<News> mDataSource = new ArrayList<News>();
 
 	private Context mContext;
 	private ViewHolder mViewHolder;
@@ -43,24 +43,23 @@ public class NewsGridAdapter extends InfiniteBaseAdapter {
 	}
 
 	public void setData(List<News> news) {
-		mDataSource.getChannel().clear();
-		mDataSource.getChannel().setNews(news);
+		mDataSource.addAll(news);
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return mDataSource.getChannel().getNews().size();
+		return mDataSource.size();
 	}
 
 	@Override
 	public News getItem(int position) {
-		return mDataSource.getChannel().getNews().get(position);
+		return mDataSource.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return mDataSource.getChannel().getNews().get(position).getId();
+		return mDataSource.get(position).getId();
 	}
 
 	@Override

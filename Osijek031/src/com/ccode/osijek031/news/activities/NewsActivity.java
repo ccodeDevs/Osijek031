@@ -35,7 +35,7 @@ public class NewsActivity extends BaseActivity {
 	private SideMenuAdapter mSideMenuAdapter;
 
 	// flags
-	private boolean switchViewSelected = false;
+	private boolean switchViewToggleSelected = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,10 +88,9 @@ public class NewsActivity extends BaseActivity {
 				long id) {
 			handleSideMenuItemClick(position);
 		}
-
 	};
 
-	protected void handleSideMenuItemClick(int position) {
+	private void handleSideMenuItemClick(int position) {
 		mDrawerLayout.closeDrawers();
 	}
 
@@ -135,14 +134,14 @@ public class NewsActivity extends BaseActivity {
 	}
 
 	private void toggleSwitchViewClick(MenuItem item) {
-		if (switchViewSelected) {
+		if (switchViewToggleSelected) {
 			item.setIcon(R.drawable.ic_menu_selectall_holo_dark);
-			switchViewSelected = false;
+			switchViewToggleSelected = false;
 			replaceFragment(R.id.activity_news_container,
 					NewsGridFragment.newInstance(), false);
 		} else {
 			item.setIcon(R.drawable.ic_menu_selectall_holo_light);
-			switchViewSelected = true;
+			switchViewToggleSelected = true;
 			replaceFragment(R.id.activity_news_container,
 					NewsListFragment.newInstance(), false);
 		}
