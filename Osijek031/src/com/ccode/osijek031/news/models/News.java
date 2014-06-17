@@ -1,5 +1,7 @@
 package com.ccode.osijek031.news.models;
 
+import java.io.Serializable;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -14,7 +16,9 @@ import com.ccode.osijek031.base.models.BaseModel;
  */
 
 @Root(name = "item")
-public class News extends BaseModel {
+public class News extends BaseModel implements Serializable {
+
+	private static final long serialVersionUID = -6320967448496535280L;
 
 	private long id;
 
