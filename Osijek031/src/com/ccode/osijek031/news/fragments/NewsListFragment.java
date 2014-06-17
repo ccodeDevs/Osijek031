@@ -1,5 +1,8 @@
 package com.ccode.osijek031.news.fragments;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +28,10 @@ import com.ccode.osijek031.volley.VolleyErrorHelper;
  * @version 1.0
  */
 
-public class NewsListFragment extends BaseFragment {
+public class NewsListFragment extends BaseFragment implements OnRefreshListener {
+
+	// Pull to refresh
+	private PullToRefreshLayout mPullToRefreshLayout;
 
 	// UI Widgets
 	private ListView mListView;
@@ -52,6 +58,10 @@ public class NewsListFragment extends BaseFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		ViewGroup viewGroup = (ViewGroup) view;
+		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+		ActionBarPullToRefresh.from(getActivity()).insertLayoutInto(viewGroup)
+				.listener(this).setup(mPullToRefreshLayout);
 		initListeners();
 		initData();
 	}
@@ -76,19 +86,26 @@ public class NewsListFragment extends BaseFragment {
 
 	@Override
 	protected void initData() {
+		refreshData(false);
+	}
+
+	private void refreshData(boolean forceNetwork) {
+		mPullToRefreshLayout.setRefreshing(true);
 		NewsDataManager.getInstance(getActivity()).getNews(mNewsLoadedListener,
-				false);
+				forceNetwork);
 	}
 
 	private OnNewsLoadedListener mNewsLoadedListener = new OnNewsLoadedListener() {
 
 		@Override
 		public void onResponse(NewsWrapper news) {
+			mPullToRefreshLayout.setRefreshComplete();
 			handleNewsResponse(news);
 		}
 
 		@Override
 		public void onError(VolleyError error) {
+			mPullToRefreshLayout.setRefreshComplete();
 			VolleyErrorHelper.handleErrorWithToast(error, getActivity());
 		}
 	};
@@ -103,5 +120,11 @@ public class NewsListFragment extends BaseFragment {
 
 	public static BaseFragment newInstance() {
 		return new NewsListFragment();
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		refreshData(true);
+
 	}
 }

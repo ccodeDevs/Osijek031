@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.android.volley.VolleyError;
 import com.ccode.osijek031.R;
@@ -29,6 +30,8 @@ public class SplashActivity extends BaseActivity {
 	private SystemUiHider mSystemUiHider;
 
 	private Handler mNextActivityHandler;
+	private Handler mShowNotificationBarHandler;
+	
 	private long getDataFromBackendStartTime;
 
 	@Override
@@ -55,6 +58,7 @@ public class SplashActivity extends BaseActivity {
 	@Override
 	protected void initUi() {
 		mNextActivityHandler = new Handler();
+		mShowNotificationBarHandler = new Handler();
 		initUiHider();
 	}
 
@@ -63,6 +67,7 @@ public class SplashActivity extends BaseActivity {
 		mSystemUiHider = SystemUiHider.getInstance(this, anchorView,
 				SystemUiHider.FLAG_HIDE_NAVIGATION);
 		mSystemUiHider.setup();
+		mShowNotificationBarHandler.postDelayed(showNotifRunnable, 1000);
 	}
 
 	private void addSplashFragment() {
@@ -138,6 +143,14 @@ public class SplashActivity extends BaseActivity {
 		@Override
 		public void run() {
 			startNextActivity();
+		}
+	};
+	
+	private Runnable showNotifRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		}
 	};
 
