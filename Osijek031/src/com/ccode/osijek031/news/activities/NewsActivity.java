@@ -146,7 +146,7 @@ public class NewsActivity extends BaseActivity {
 					NewsListFragment.newInstance(), false);
 		}
 	}
-
+	
 	@Override
 	protected void initData() {
 		// ok nothing

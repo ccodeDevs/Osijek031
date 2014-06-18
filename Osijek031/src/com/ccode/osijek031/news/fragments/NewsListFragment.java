@@ -118,13 +118,12 @@ public class NewsListFragment extends BaseFragment implements OnRefreshListener 
 		mListAdapter.setData(news.getChannel().getNews());
 	}
 
-	public static BaseFragment newInstance() {
-		return new NewsListFragment();
-	}
-
 	@Override
 	public void onRefreshStarted(View view) {
 		refreshData(true);
+	}
 
+	public static BaseFragment newInstance() {
+		return new NewsListFragment();
 	}
 }
