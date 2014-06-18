@@ -29,7 +29,7 @@ import com.google.gson.JsonSyntaxException;
 
 public class GsonRequest<T> extends Request<T> {
 
-	private static final String PROTOCOL_CHARSET = "utf-8";
+	private static final String PROTOCOL_CHARSET = "latin-2";
 	private static final String PROTOCOL_CONTENT_TYPE = String.format(
 			"application/json", PROTOCOL_CHARSET);
 

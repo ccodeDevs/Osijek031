@@ -28,7 +28,7 @@ import com.ccode.osijek031.utils.Utils;
 public class SimpleXmlRequest<T> extends Request<T> {
 
 	/** Charset for request. */
-	private static final String PROTOCOL_CHARSET = "utf-8";
+	private static final String PROTOCOL_CHARSET = "latin-2";
 
 	/** Content type for request. */
 	private static final String PROTOCOL_CONTENT_TYPE = String.format(
@@ -124,8 +124,7 @@ public class SimpleXmlRequest<T> extends Request<T> {
 	@Override
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		try {
-			String xml = new String(response.data,
-					VolleyHttpHeaderParser.parseCharset(response.headers));
+			String xml = new String(response.data, PROTOCOL_CHARSET);
 			T result = null;
 			Serializer serializer = new Persister();
 			result = serializer.read(mClazz, xml, false);
@@ -150,5 +149,4 @@ public class SimpleXmlRequest<T> extends Request<T> {
 			return null;
 		}
 	}
-
 }

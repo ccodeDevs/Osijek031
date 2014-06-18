@@ -17,6 +17,7 @@ import com.ccode.osijek031.base.fragments.BaseFragment;
 import com.ccode.osijek031.news.adapters.NewsListAdapter;
 import com.ccode.osijek031.news.managers.NewsDataManager;
 import com.ccode.osijek031.news.managers.NewsDataManager.OnNewsLoadedListener;
+import com.ccode.osijek031.news.models.News;
 import com.ccode.osijek031.news.models.NewsWrapper;
 import com.ccode.osijek031.volley.VolleyErrorHelper;
 
@@ -81,7 +82,11 @@ public class NewsListFragment extends BaseFragment implements OnRefreshListener 
 	};
 
 	private void handleNewsItemClick(int position) {
-
+		News news = mListAdapter.getItem(position);
+		if (news != null) {
+			replaceFragment(R.id.activity_news_container,
+					NewsDetailsFragment.newInstance(news), true);
+		}
 	}
 
 	@Override
