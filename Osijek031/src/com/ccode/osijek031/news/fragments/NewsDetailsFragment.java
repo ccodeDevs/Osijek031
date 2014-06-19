@@ -1,11 +1,13 @@
 package com.ccode.osijek031.news.fragments;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.fragments.BaseFragment;
 import com.ccode.osijek031.news.models.News;
+import com.ccode.osijek031.utils.DateTimeUtils;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -28,7 +31,7 @@ import com.squareup.picasso.Picasso;
 public class NewsDetailsFragment extends BaseFragment {
 
 	// Bundle keys
-	private static final String KEY_BUNDLE_NEWS = "key_bundle_news";
+	public static final String KEY_BUNDLE_NEWS = "key_bundle_news";
 
 	// Ui widgets
 	private ImageView mNewsImage;
@@ -39,6 +42,16 @@ public class NewsDetailsFragment extends BaseFragment {
 	// Datasource
 	private News mNews;
 
+	public static NewsDetailsFragment newInstance(Bundle bundle) {
+		NewsDetailsFragment f = new NewsDetailsFragment();
+		f.setArguments(bundle);
+		return f;
+	}
+
+	public NewsDetailsFragment() {
+	}
+
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -106,7 +119,14 @@ public class NewsDetailsFragment extends BaseFragment {
 					.placeholder(R.drawable.logo).into(mNewsImage);
 		}
 
-		mDateText.setText(mNews.getPublishedDate());
+		java.text.DateFormat dateFormat = DateFormat.getLongDateFormat(getActivity());
+		Date publishedDate = DateTimeUtils.getDateFromString(mNews.getPublishedDate());
+		if (publishedDate != null) {
+			mDateText.setText(dateFormat.format(publishedDate));
+		} else {
+			mDateText.setVisibility(View.GONE);
+		}
+
 		mTitleText.setText(Html.fromHtml(mNews.getTitle()));
 		mDescriptionText.setText(Html.fromHtml(mNews.getDescription()));
 	}

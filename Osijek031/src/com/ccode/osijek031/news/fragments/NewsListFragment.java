@@ -3,6 +3,7 @@ package com.ccode.osijek031.news.fragments;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import com.android.volley.VolleyError;
 import com.ccode.osijek031.R;
 import com.ccode.osijek031.base.fragments.BaseFragment;
+import com.ccode.osijek031.news.activities.NewsDetailsActivity;
 import com.ccode.osijek031.news.adapters.NewsListAdapter;
 import com.ccode.osijek031.news.managers.NewsDataManager;
 import com.ccode.osijek031.news.managers.NewsDataManager.OnNewsLoadedListener;
@@ -84,8 +86,9 @@ public class NewsListFragment extends BaseFragment implements OnRefreshListener 
 	private void handleNewsItemClick(int position) {
 		News news = mListAdapter.getItem(position);
 		if (news != null) {
-			replaceFragment(R.id.activity_news_container,
-					NewsDetailsFragment.newInstance(news), true);
+			Intent intent = new Intent(getActivity(), NewsDetailsActivity.class);
+			intent.putExtra(NewsDetailsFragment.KEY_BUNDLE_NEWS, news);
+			startActivity(intent);
 		}
 	}
 

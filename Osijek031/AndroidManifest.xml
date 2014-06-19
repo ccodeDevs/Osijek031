@@ -28,6 +28,10 @@
             android:name="com.ccode.osijek031.news.activities.NewsActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.ccode.osijek031.news.activities.NewsDetailsActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
